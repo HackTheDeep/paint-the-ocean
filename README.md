@@ -3,4 +3,4 @@
 # Technologies Used
 - Python 🐍
 - FFMPEG 🎥
-- [Hugen}(http://hugin.sourceforge.net/)
+- [Hugin](http://hugin.sourceforge.net/)
