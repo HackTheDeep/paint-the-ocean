@@ -18,7 +18,7 @@ Challenge URL: https://github.com/amnh/HackTheDeep/wiki/Painting-the-Ocean
 - Docker
 
 ## Cleaning Up the Images
-Our team was given a collection of images separated into 3 zipped files. Each file contained approximately 300 drone images taken of dye releases along Florida beach coasts from December 2013.
+Our team was given a collection of images separated into 3 zipped files. Each file contained approximately 300 drone images taken of dye releases along a Florida beach from December 2013.
 
 We received the images in order that they were captured, and wanted to stitch the together into a movie to observe the growth of the spill.  In order to produce a clear, stable image, we batched images.
 
