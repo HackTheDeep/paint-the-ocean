@@ -1,5 +1,7 @@
 # Painting the Ocean
-#### Team
+https://github.com/amnh/HackTheDeep/wiki/Painting-the-Ocean
+
+## Team
 - [Alex Keyes](https://github.com/Alex-Keyes)
 - [Hector Leiva](https://github.com/hectorleiva)
 - [Shelby Rackley](https://github.com/srackley)
@@ -9,14 +11,16 @@
 ## Technologies Used
 - Python 🐍
 - [OpenCV](https://opencv.org/)
+- VidStab
 - FFMPEG 🎥
+- Docker
 
 ## Cleaning Up the Images
-Our team was given a collection of images separated into 3 zipped files. Each file contained images of roughly two "unbroken" time spans and then "skipped in time" to a later sequence of images.
+Our team was given a collection of images separated into 3 zipped files. Each file contained approximately 300 drone images taken of dye releases along Florida beach coasts from December 2013.
 
-In order to produce the clearest image stabilization, we collected contiguous image sequences into "batches."
+We received the images in order that they were captured, and wanted to stitch the together into a movie to observe the growth of the spill.  In order to produce a clear, stable image, we batched images.
 
-We used the following command to generate a movie of images within each zipped archive to check how long each image batch was before it "skipped in time:"
+We used the following command to generate a movie of images within each zipped archive to check how long each image batch was before it skipped in time:
 
 ```
 ffmpeg -r 30 -f image2 -s 1000x750 -i SCOPE\ rip\ dye\ 12\ dec13_1/img-%04d.JPG -vcodec libx264 -crf 25 -pix_fmt yuv420p scope_rip_1.mp4
@@ -57,24 +61,13 @@ A total of 5 movies would be generated (one for each batch of images that were a
 ### Separating the work from here
 Since now we had a smaller resolution collection of images of the "batches" and "films" of the batches as well, the video was passed to one part of the team to stablize the video, and the images were passed to the rest of the team to run OpenCV to isolate and filter for just the colored dye in the water.
 
-### Let's make a movie
-After the movies were stablized individually, we stitched them together in order to see the entire result. Since the encoding was done differently on the stablization end and produced a different format, this is the command that was run to combine them:
-
-```
-ffmpeg -i "concat:out_stabilize1.mpg|out_stabilize2.mpg|out_stabilize3.mpg|out_stabilize4.mpg|out_stabilize5.mpg" final_stitched_video.mpg
-```
-
-To make a movie of all the resized images (before being stablized) to see the impact of our work:
-```
-ffmpeg -i 1-batch-1_333.mp4 -i 2-batch-334_527.mp4 -i 3-batch-528_769.mp4 -i 4-batch-770_903.mp4 -i 5-batch-904_1123.mp4 -filter_complex "[0:v:0] [1:v:0] [2:v:0] [3:v:0] [4:v:0] concat=n=5:v=1 [v]" -map "[v]" output_batch_stitched_video.mp4
-```
-
-Now we can compare `final_stitched_Video.mpg` vs. `output_batch_stitched_video.mp4`.
-
-
 ## Video stablization
-Download FFmpeg (https://github.com/FFmpeg/FFmpeg)
-Download vid.stab (https://github.com/georgmartius/vid.stab)
+To stabilize video, we needed to download and install Vidstab video stabilization library (which can be plugged-in with Ffmpeg).  The collection of "oil spill" photos, when stitched into a movie, were undesireably shakey and vidstab targets control points to help create smoother and more stable videos.
+
+We downloaded FFmpeg (https://github.com/FFmpeg/FFmpeg) and vid.stab (https://github.com/georgmartius/vid.stab).
+
+We originally thought we could use the native de-shake method in Ffmpeg, but later learned that we did not have enough control over the process, and instead opted to run Ffmpeg through an Ubuntu virtual environment in Docker.  (Vidstab is not normally included with Ffmpeg and it can only added using a Linux-based system.)
+
 ```
 docker run \
  --name ubuntu \
@@ -91,6 +84,9 @@ cmake .
 make
 make install
 ```
+
+In order to integrate the Vidstab library, we had to configure Ffmpeg to enable the library (i.e. "--enable-libvidstab")
+
 ```
 ..cd
 cd FFmpeg/
@@ -100,10 +96,27 @@ make
 make install
 export LD_LIBRARY_PATH={/src/directory/}:$LD_LIBRARY_PATH
 ```
+
+First we run a detection of the transformations that need to occur in order to stabilize the video, and then we apply them with the second command which results in an mpg output (stabilized file).
+
 ```
 ffmpeg -i {./test_video.mp4} -vf vidstabdetect=shakiness=10:accuracy=15:result=”mytransforms1.trf” dummyoutput.mpg
 ffmpeg -i {./test_video.mp4} -vf vidstabtransform=zoom=5:input=”mytransforms1.trf” stabilized_output.mpg
 ```
+
+### Let's make a movie
+After the movies were stablized individually, we stitched them together in order to see the entire result. Since the encoding was done differently on the stablization end and produced a different format, this is the command that was run to combine them:
+
+```
+ffmpeg -i "concat:out_stabilize1.mpg|out_stabilize2.mpg|out_stabilize3.mpg|out_stabilize4.mpg|out_stabilize5.mpg" final_stitched_video.mpg
+```
+
+To make a movie of all the resized images (before being stablized) to see the impact of our work:
+```
+ffmpeg -i 1-batch-1_333.mp4 -i 2-batch-334_527.mp4 -i 3-batch-528_769.mp4 -i 4-batch-770_903.mp4 -i 5-batch-904_1123.mp4 -filter_complex "[0:v:0] [1:v:0] [2:v:0] [3:v:0] [4:v:0] concat=n=5:v=1 [v]" -map "[v]" output_batch_stitched_video.mp4
+```
+
+Now we can compare `final_stitched_Video.mpg` vs. `output_batch_stitched_video.mp4`.
 
 ## OpenCV
 TBD
