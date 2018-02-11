@@ -1,6 +1,8 @@
 # Painting the Ocean
 https://github.com/amnh/HackTheDeep/wiki/Painting-the-Ocean
 
+![demo-gif](demo.gif)
+
 ## Team
 - [Alex Keyes](https://github.com/Alex-Keyes)
 - [Hector Leiva](https://github.com/hectorleiva)
