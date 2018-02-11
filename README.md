@@ -137,7 +137,7 @@ The analysis happens in 3 steps:
     # morphology
     maskOpen = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernelOpen)
     maskClose = cv2.morphologyEx(maskOpen, cv2.MORPH_CLOSE, kernelClose)
-    ```
+```
 4. the mask is transposed back onto the original stabilized video stream in order to create a defined geometric contour
 ```
     maskFinal = maskClose
