@@ -1,4 +1,4 @@
-# Paint the Ocean
+# Painting the Ocean
 #### Team
 - [Alex Keyes](https://github.com/Alex-Keyes)
 - [Hector Leiva](https://github.com/hectorleiva)
@@ -14,16 +14,16 @@
 - [Hugin](http://hugin.sourceforge.net/)
 
 ## Cleaning Up the Images
-The collection of images that we were given were separated into 3 zipped files. Each zip that contained images had roughly two "unbroken" spans of time where it was easier to track the spill of the dye before some time would pass and "skip in time" to the next sequence of images.
+Our team was given a collection of images separated into 3 zipped files. Each file contained images of roughly two "unbroken" time spans and then "skipped in time" to a later sequence of images.
 
-What we ended up doing in order to obtain the best stabilization was to contain these sequences as separate "films" or "batches" of images.
+In order to produce the clearest image stabilization, we collected contiguous image sequences into "batches."
 
-We used the following command to generate a movie of the images within each zipped archive to quickly check roughly around how long each sequence of images were before they "skipped in time":
+We used the following command to generate a movie of images within each zipped archive to check how long each image batch was before it "skipped in time:"
 ```
 ffmpeg -r 30 -f image2 -s 1000x750 -i SCOPE\ rip\ dye\ 12\ dec13_1/img-%04d.JPG -vcodec libx264 -crf 25 -pix_fmt yuv420p scope_rip_1.mp4
 ```
 
-After reviewing the movie and then manually determining where to split up the images into batches, we needed to lower the file size of each image to be able to perform any stablization process over them for the sake of time.
+After reviewing the movie and manually determining where to split up the images into batches, we needed to lower the file size of each image to be able to perform any stablization process over them for the sake of time.
 
 The following runs through the raw images, scales them down to 2000x1500 (the same ratio as the raw images) and outputs them into a `resized` directory with the output files maintaining the same numbering.
 ```
