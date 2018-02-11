@@ -1,10 +1,14 @@
+ifndef HACK_THE_DEEP_IMAGES_PATH
+	HACK_THE_DEEP_IMAGES_PATH ?= $(shell bash -c 'read -p "Path to raw images: " pwd; echo $$pwd')
+endif
+
 RESIZE_DEPENDENCY_LOCK_FILE = .lock/.resize-dependencies
 RESIZE_LOCK_FILE = .lock/.resize
 CONVERT_TO_VIDEO_LOCK_FILE = .lock/.convert-to-video
 
 RESIZE_IMAGE_DIRECTORY = ./resized
-RESIZE_INPUT_IMAGE = ${HACK_THE_DEEP_IMAGES_PATH}/img-%04d.JPG
 RESIZE_OUTPUT_IMAGE = resized/output-%04d.jpg
+RESIZE_INPUT_IMAGE = $(HACK_THE_DEEP_IMAGES_PATH)/img-%04d.JPG
 
 CONVERT_TO_VIDEO_FILE = scope_rip_1.mp4
 
@@ -17,6 +21,10 @@ ifeq (,$(wildcard $(RESIZE_IMAGE_DIRECTORY)))
 	@mkdir $(RESIZE_IMAGE_DIRECTORY)
 endif
 ifeq (,$(wildcard $(RESIZE_LOCK_FILE)))
+ifndef HACK_THE_DEEP_IMAGES_PATH
+	@echo "Path to raw images: "
+	@read HACK_THE_DEEP_IMAGES_PATH
+endif
 	ffmpeg -i $(RESIZE_INPUT_IMAGE) -vf scale=2000:1500 $(RESIZE_OUTPUT_IMAGE)
 	@touch $(RESIZE_LOCK_FILE)
 else
