@@ -1,5 +1,5 @@
 # Painting the Ocean
-https://github.com/amnh/HackTheDeep/wiki/Painting-the-Ocean
+Challenge URL: https://github.com/amnh/HackTheDeep/wiki/Painting-the-Ocean
 
 ![demo-gif](demo.gif)
 
