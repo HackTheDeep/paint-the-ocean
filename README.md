@@ -8,6 +8,7 @@
 
 ## Technologies Used
 - Python 🐍
+- [Matplotlib](https://matplotlib.org/)
 - [OpenCV](https://opencv.org/)
 - FFMPEG 🎥
 - [Hugin](http://hugin.sourceforge.net/)
