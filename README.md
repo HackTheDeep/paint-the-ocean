@@ -119,5 +119,33 @@ ffmpeg -i 1-batch-1_333.mp4 -i 2-batch-334_527.mp4 -i 3-batch-528_769.mp4 -i 4-b
 Now we can compare `final_stitched_Video.mpg` vs. `output_batch_stitched_video.mp4`.
 
 ## OpenCV
-TBD
+OpenCV is used as the primary analysis tool on this project once the visual data has been sufficiently cleaned by the stabilization process described above. 
+In this use case, computer vision can define solid boundaries of the increasing large oil slick, and add geometry as a helpful visual guide to
+the development of the slick over time.  Additionally, defining a shape in OpenCV can be used to train a machine learning model in the future, 
+allowing the creation of an accurate model of how we can expect oil to be dispersed in similar scenarios.
 
+The analysis happens in 3 steps:
+1. the stabilized video is streamed in as a opencv video object
+`cam = cv2.VideoCapture('final_stablizied_stitched_video.mpg')`
+2. RGB coloring is transformed into HSV coloring for better definition
+`imgHSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)`
+3. a Mask is created by defining an upper and lower bound for HSV colors 
+```
+    # create the Mask
+    mask = cv2.inRange(imgHSV, lowerBound, upperBound)
+
+    # morphology
+    maskOpen = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernelOpen)
+    maskClose = cv2.morphologyEx(maskOpen, cv2.MORPH_CLOSE, kernelClose)
+    ```
+4. the mask is transposed back onto the original stabilized video stream in order to create a defined geometric contour
+```
+    maskFinal = maskClose
+    conts, h = cv2.findContours(maskFinal.copy(), cv2.RETR_EXTERNAL,
+                                cv2.CHAIN_APPROX_NONE)
+
+    cv2.drawContours(img, conts, -1, (255, 0, 0), 3)
+    for i in range(len(conts)):
+        x, y, w, h = cv2.boundingRect(conts[i])
+        cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255))
+```
