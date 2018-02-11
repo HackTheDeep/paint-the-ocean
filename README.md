@@ -53,8 +53,21 @@ ffmpeg -f image2 -s 1000x750 -i 2-batch-resized-334_527/movie_files/output-%04d.
 A total of 5 movies would be generated (one for each batch of images that were an unbroken amount of time).
 
 ### Separating the work from here
-
 Since now we had a smaller resolution collection of images of the "batches" and "films" of the batches as well, the video was passed to one part of the team to stablize the video, and the images were passed to the rest of the team to run OpenCV to attempt to isolate and filter for just the colored dye in the water.
+
+### Let us make a movie
+After the movies were stablized individually, we need to stitch them together in order to see the entire result. Since the encoding was done differently on the stablization end and produced a different format, this is the command that was run to sntitch them together:
+```
+ffmpeg -i "concat:out_stabilize1.mpg|out_stabilize2.mpg|out_stabilize3.mpg|out_stabilize4.mpg|out_stabilize5.mpg" final_stitched_video.mpg
+```
+
+To make a movie of all the resized images (before being stablized) together to see what our work did:
+```
+ffmpeg -i 1-batch-1_333.mp4 -i 2-batch-334_527.mp4 -i 3-batch-528_769.mp4 -i 4-batch-770_903.mp4 -i 5-batch-904_1123.mp4 -filter_complex "[0:v:0] [1:v:0] [2:v:0] [3:v:0] [4:v:0] concat=n=5:v=1 [v]" -map "[v]" output_batch_stitched_video.mp4
+```
+
+Then we can compare `final_stitched_Video.mpg` vs. `output_batch_stitched_video.mp4`.
+
 
 ## Video stablization
 TBD
