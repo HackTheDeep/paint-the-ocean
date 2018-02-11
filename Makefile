@@ -41,7 +41,6 @@ stabilize-video: install-docker
 ## Helpers
 install-ffmpeg:
 ifeq (,$(wildcard $(RESIZE_DEPENDENCY_LOCK_FILE)))
-	@echo "Downloading dependencies for resize..."
 	brew install ffmpeg
 	@touch $(RESIZE_DEPENDENCY_LOCK_FILE)
 else
@@ -51,6 +50,7 @@ endif
 install-docker:
 ifeq (,$(wildcard $(STABILIZE_VIDEO_DEPENDENCY_LOCK_FILE)))
 	brew install docker docker-compose docker-machine xhyve docker-machine-driver-xhyve
+	@touch $(STABILIZE_VIDEO_DEPENDENCY_LOCK_FILE)
 else
 	@echo "Skipping stabilize video dependency download."
 endif
