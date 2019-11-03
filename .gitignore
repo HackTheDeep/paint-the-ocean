@@ -1,3 +1,11 @@
+.DS_Store
+
 .lock
 resized
 *.mp4
+
+media_drive/*
+!media_drive/.gitkeep
+
+# Vim
+*.swp

@@ -151,3 +151,73 @@ The analysis happens in 3 steps:
         x, y, w, h = cv2.boundingRect(conts[i])
         cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255))
 ```
+
+## Post-Hackathon Improvements
+
+Hector went ahead and created an isolated Docker container that will process all the photo/video work as listed above. Here are the steps for anyone starting out with this project:
+
+0. Clone this repository into your local machine
+```
+git clone git@github.com:HackTheDeep/paint-the-ocean.git
+```
+
+1. Make sure you have Docker installed on your machine: https://docs.docker.com/docker-for-mac/install/ | This needs to be installed ahead of time before we can truly start anything.
+
+2. You will notice an empty directory called `media_drive/` for this project. This directory is where all the image processing will occur and it'll be our volume.
+
+3. Copy over the images that we will be processing into the `media_drive/`. The images should be in a folder/directory, and every image should be a JPG image. If they are any other format, this process won't work for now.
+
+4. 
+
+*The following is all automated and will take some time to build on your machine.*
+
+```
+make start
+```
+
+This will immediately start building out the Docker container. It will create a container on your machine, install everything nescessary to do all the image processing work, and you will immediately be pushed into this Docker container after it is done installing.
+
+5. You should now be inside the Docker container.
+
+This environment has all of the necessary software you'll need to be able to process your images to render a stablized video that you will need to use to then run the Python OpenCV program against.
+
+If you type out `ls -la`, you should see all of the same folders that were within the repoistory you just cloned with a few additions like `libs/` for example.
+
+Run the command `source setup.sh` to finish setting up the container properly.
+
+6. Remember where you placed your images, we will be referencing that location to process the following scripts.
+
+You can double-check where they are by typing `ls -la media_drive/` and locate them that way from inside the Docker container
+
+7. Execute the following, making sure that you've replaced `<images-folder-name-here>` with the location of where they are within the `media_drive/`. We are looking for the folder that contains just the images themselves.
+```
+./convert_images_to_stablized_video.sh media_drive/<image-folder-name-here>/<all-image-files-here>
+```
+
+8. The script will be excuting the following:
+`0_rename.sh` - Makes sure that if for any chance the files have `.JPG` named in their extension OR `.JPEG` - that they are transformed to `.jpg` to make it easier for the work later on.
+
+`1_resizeimages.sh` - Makes sure that all the images are halved in size. The images we were dealing with during the hackathon were too high in resolution to be able to process the video stablization and OpenCV work later on.
+This creates a folder within `media_drive/resized` that will contain all of the resized images in sequencial order.
+
+`2_convertvideo.sh` - Converts the sequence of images that have been resized into a single video, this video will be in `media_drive/videos` and called something like `converted_images_to_video` and have a timestamp of when this was accomplished.
+
+`3_stablizevideo.sh` - Will take the video entitled `converted_images_to_video` from the `media_drive` and stablizes it. The stablized video will exist within the `media_drive` and be called something like `clip-stablized`.
+
+9. After this is done, you should now be able to access the stablized video from within the `media_drive/videos`. You will now reference this video for the OpenCV processing.
+
+10. You can now exist this container by typing `exit` at any time. The container will exit as well and "turn off"
+
+11. If for any reason you need to re-enter the container to do additional work, you can type
+```
+make enter
+```
+
+and this should restart the container and you'll jump into it as before
+
+12. Once you feel like all the work for image/video stablization has been completed, feel free to delete this container via the command:
+```
+make destroy
+```
+
+This will completely destroy the container and anything that you've installed within it. This `media_drive/` will be left completely alone and on your system. So any converted images/videos, those will remain on your system as before.
