@@ -9,3 +9,7 @@ media_drive/*
 
 # Vim
 *.swp
+
+# Makefile builds
+.build-docker
+.docker-installation
