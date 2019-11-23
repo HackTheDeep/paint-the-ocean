@@ -1,3 +1,15 @@
+.DS_Store
+
 .lock
 resized
 *.mp4
+
+media_drive/*
+!media_drive/.gitkeep
+
+# Vim
+*.swp
+
+# Makefile builds
+.build-docker
+.docker-installation

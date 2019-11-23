@@ -1,0 +1,8 @@
+media_drive/**/*
+
+.git/
+
+README.md
+
+.docker-installation
+.build-docker

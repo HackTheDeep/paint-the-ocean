@@ -7,7 +7,7 @@ import numpy as np
 lowerBound = np.array([0, 170, 90])
 upperBound = np.array([378, 255, 255])
 
-cam = cv2.VideoCapture('final_stablizied_stitched_video.mpg')
+cam = cv2.VideoCapture('media_drive/clip-stablized.mp4')
 kernelOpen = np.ones((5, 5))
 kernelClose = np.ones((20, 20))
 
