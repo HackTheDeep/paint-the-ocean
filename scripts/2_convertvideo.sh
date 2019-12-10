@@ -13,11 +13,11 @@ die () {
 
 [ "$#" -eq 1 ] || die "Only the path to the directory of sequential images is required, you provided $# We need something like /path/to/images/"
 
-current_time=$(date "+%Y.%m.%d-%H.%M.%S")
+current_time=$(($(date +%s%N)/1000000))
 
 mkdir -p /app/media_drive/videos/
 
-OUTPUT_PATH="/app/media_drive/videos/converted_images_to_video.${current_time}.mp4"
+OUTPUT_PATH="/app/media_drive/videos/converted_images_to_video_${current_time}.mp4"
 
 ffmpeg -r 24 -f image2 \
     -i "$1/output-%04d.jpg" \
@@ -26,5 +26,5 @@ ffmpeg -r 24 -f image2 \
     -pix_fmt yuv420p \
     ${OUTPUT_PATH}
 
-return $OUTPUT_PATH
+echo $OUTPUT_PATH
 

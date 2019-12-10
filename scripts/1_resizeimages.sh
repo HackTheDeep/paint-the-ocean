@@ -30,4 +30,4 @@ ffmpeg -pattern_type glob \
     -vf "scale=iw/2:ih/2" \
     $OUTPUT_PATH/output-%04d.jpg
 
-return $OUTPUT_PATH
+echo $OUTPUT_PATH
