@@ -3,12 +3,11 @@
 # A helper script in case any of the files we are trying to work with need to have
 # their file extensions lowercased
 
-for i in *.JPEG;
-do
-    mv "$i" "${i/.JPEG/.jpg}"
-done
+SEARCH_DIR=$1
 
-for i in *.JPG;
-do
-    mv "$i" "${i/.JPG/.jpg}"
-done
+find "./$1" -name "*.JPEG" -type f | while read -r f; do mv "$f" "${f/.JPEG/._jpg}"; done
+
+find "./$1" -name "*.JPG" -type f | while read -r f; do mv "$f" "${f/.JPG/._jpg}"; done
+
+find "./$1" -name "*._jpg" -type f | while read -r f; do mv "$f" "${f/._jpg/.jpg}"; done
+

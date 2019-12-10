@@ -15,6 +15,7 @@ die () {
 [ "$#" -eq 1 ] || die "Only the path to the input video is required, you provided $#"
 
 mkdir -p /app/media_drive/videos/
+current_time=$(($(date +%s%N)/1000000))
 
 # First, we are generating a file that contains the stablization data necessary for the stable version of the video
 ffmpeg -i $1 \
@@ -23,6 +24,6 @@ ffmpeg -i $1 \
 # Second, take the file generated and create a new stablized version of the video
 ffmpeg -i $1 \
     -vf vidstabtransform=zoom=5:input="transforms.trf" \
-    /app/media_drive/clip-stablizied.mp4 && \
+    /app/media_drive/clip-stablizied_${current_time}.mp4 && \
 # Thirdly, delete the transformation data, it is no longer required
 rm /app/transforms.trf
